@@ -1,0 +1,95 @@
+\documentclass[a4paper,11pt,DIV0]{scrreprt}
+
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{scrpage2}
+\usepackage{amsmath, amssymb, amsthm}
+%\usepackage{listings, color}
+\usepackage{graphicx}
+\usepackage[ngerman]{babel}
+%\usepackage{moreverb}
+%\usepackage{tabularx}
+%\usepackage{bbold}
+
+\KOMAoption{chapterprefix}{}
+
+%\lstset{language=Matlab, numbers=left, numberstyle=\tiny, tabsize=4,%
+%	keywordstyle=\color{blue}\bfseries, commentstyle=\color{gruen}\ttfamily,%
+%	basicstyle=\footnotesize, identifierstyle=\ttfamily, %
+%	stringstyle=\color{red}, showstringspaces=false, %
+%	stepnumber=5, firstnumber=1, breaklines=true,%
+%	numberfirstline=true, emphstyle=\bfseries, frame=single}
+%\definecolor{gruen}{rgb}{0.25,0.6,0.1}
+
+\renewcommand{\thechapter}{\Roman{chapter}}
+\renewcommand{\thesection}{\arabic{section}}
+\newcommand{\bbone}{1\hspace{-0,9ex}1} 
+
+\newtheoremstyle{aufgabenstyle}%
+	{}%spaceabove
+	{}%spacebelow
+	{\bfseries}%bodyfont
+	{}%indent
+	{\scshape}%headfont
+	{.}%headpunctuation
+	{}%headspace
+	{}%headspec
+	%{\thmname{#1}}%\thmnumber{ #2}}%headspec
+
+\theoremstyle{definition}
+\newtheorem{aufgabe}{Aufgabe}[section]
+\newtheorem{def}{Definition}[section]
+\newtheorem{lem}{Lemma}[section]
+\newtheorem{satz}{Satz}[section]
+\newtheorem{kor}{Korollar}[section]
+\newtheorem{bem}{Bemerkung}[section]
+
+%\ihead{}
+%\ohead{}
+%\setlength{\headheight}{4em}
+%\setheadsepline{0.5pt}
+%\pagestyle{scrheadings}
+
+
+\parindent0pt
+
+\makeatletter 
+\renewenvironment{proof}[1][\proofname]{% 
+% 
+\setlength{\topsep}{0pt} 
+\pushQED{\qed}% 
+\normalfont %\topsep6\p@\@plus6\p@\relax 
+\trivlist 
+\item[\hskip\labelsep 
+	\bfseries 
+	#1\@addpunct{.}]\ignorespaces 
+}{% 
+	\popQED\endtrivlist\@endpefalse 
+} 
+\makeatother 
+
+\DeclareMathOperator{\spann}{span}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\pr}{pr}
+
+
+\begin{document}
+
+\title{Zusammenfassung - Numerik der Differentialgleichungen}
+\author{}
+\date{}
+\maketitle
+\newpage
+
+
+\input{kapitel01}
+\input{kapitel02}
+
+
+
+
+
+
+
+\end{document}
