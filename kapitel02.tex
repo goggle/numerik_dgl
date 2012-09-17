@@ -1,1 +1,143 @@
 \chapter{Finite Differenzenverfahren für die Poisson-Gleichung}
+
+
+\begin{defi}
+Sei $\Omega \subset \mathbb R^2$ ein \textbf{Gebiet}, d.h. eine offene, beschränkte und zusammenhängende Menge
+mit Rand $\partial \Omega$, eine stückweise $C^1$-Kurve.
+
+Für $u: \Omega \to \mathbb R$, $(x,y) \mapsto u(x,y)$, $u \in C^2(\Omega)$ heisst 
+\[
+\Delta u := \frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2}
+\]
+der \textbf{Laplace-Operator}.
+
+Das \textbf{Poisson-Problem} mit Dirichlet-Randbedingungen lautet
+\begin{align*}
+- \Delta u &= f, \text{ in } \Omega \\
+u &= g, \text{ auf } \partial \Omega
+\end{align*}
+Falls $f$ und $g$ stetig sind, sucht man $u \in C^2(\Omega) \cap C(\overline \Omega)$.
+\end{defi}
+
+\begin{bem}
+\begin{enumerate}
+\item Explizite Lösungsformeln existieren nur in einfachen Geometrien.
+\item Andere Randbedingungen sind
+\begin{itemize}
+\item Neumann-Randbedingungen: $\frac{\partial u}{\partial n} = g$ auf $\partial \Omega$
+\item Gemischte oder Robin-Randbedingungen: $\alpha u + \beta \frac{\partial u}{\partial n} = g$ auf $\partial \Omega$, 
+$|\alpha| + |\beta| \neq 0$
+\end{itemize}
+\end{enumerate}
+\end{bem}
+
+\section{Finite Differenzen Diskretisierung in $\Omega = (0,1) \times (0,1)$}
+Für $n \geq 1$ führe ein äquidistantes Gitter mit Maschenweite $h = \frac{1}{n+1}$ ein:
+\begin{align*}
+x_j &= j \cdot h, \; j = 0, \ldots, n+1 \\
+y_j &= j \cdot h, \; j = 0, \ldots, n+1 \\
+\Omega_h &= \{ (x_j, y_k) \ : \ 1 \leq j, k \leq n\} \\
+\overline \Omega_h &= \{ (x_j, y_k) \ : \ 0 \leq j, k \leq n+1 \} \\
+\partial \Omega_h &= \overline \Omega_h \setminus \Omega_h
+\end{align*}
+
+Für $u \in C^4(\Omega)$ gilt:
+\begin{align*}
+\frac{\partial^2 u}{\partial x^2}(x_i, y_j)
+    &= \frac{1}{h^2} \left[ u(x_{i+1}, y_j) - 2u(x_i, y_j) + u(x_{i-1}, y_j) \right] + \mathcal O(h^2) \\
+\frac{\partial^2 u}{\partial y^2}(x_i, y_j)
+    &= \frac{1}{h^2} \left[ u(x_i, y_{j+1}) - 2u(x_i, y_j) + u(x_i, y_{j-1}) \right] + \mathcal O(h^2)
+\end{align*}
+
+Wir ersetzen das Poisson-Problem durch das diskrete Poisson-Problem:
+
+Finde $\{u_{ij}\}_{1 \leq i, j \leq n}$ so, dass
+\begin{align*}
+ - \frac{1}{h^2} \left[ u_{i+1, j} + u_{i-1, j} + u_{i, j+1} + u_{i, j-1} - 4 u_{ij} \right] &= f_{ij}, \text{ für }
+    (x_i, y_j) \in \Omega_h \\
+ u_{ij} &= g_{ij}, \text{ für } (x_i, y_j) \in \partial \Omega_h
+\end{align*}
+
+Oder anders formuliert, finde $u_h: \overline \Omega_h \to \mathbb R$ so, dass
+\begin{align*}
+- \Delta_h u_h(z) &= f(z), \text{ für } z \in \Omega_h \\
+u_h(z) &= g(z), \text{ für } z \in \partial \Omega_h ,
+\end{align*}
+wobei 
+\[
+( \Delta_h u_h)(x_i, y_j)
+    = \frac{1}{h^2}
+    \left[
+    u_h(x_{i+1}, y_j) + u_h(x_{i-1}, y_j) + u_h(x_i, y_{j+1}) + u_h(x_i, y_{j-1}) - 4 u_h(x_i, y_j) 
+    \right]
+\]
+
+\section{Diskretes Maximumprinzip}
+Für $n \geq 1$, $h = \frac{1}{n+1}$, betrachte die Differenzengleichung
+\[
+L_h u_h(z) = f(x), \text{ für } z \in \Omega_h ,
+\]
+wobei 
+\begin{align*}
+L_h u_h(z) &= \sum_{z_k \in N(z)} \alpha_k (z_k) u_h(z_k), \\
+N(z) &= \{ z_k \ : \ k = 0, 1, \ldots, 4 \}
+\end{align*}
+
+\begin{satz}[Diskretes Maximumsprinzip]
+Sei $u_h: \overline \Omega_h \to \mathbb R$ Lösung der Differenzengleichung
+\[
+L_h u_h(z) = f(z), \ z \in \Omega_h
+\]
+mit $f(z) \leq 0$ für $z \in \Omega_h$.
+Ausserdem gelte für $z \in \Omega_h$:
+\begin{itemize}
+\item[(i)] $ \alpha_k(z_k) < 0$ falls $1 \leq k \leq 4$
+\item[(ii)] $\sum_{z_k \in N(z)} \alpha_k(z_k) = 0 $
+\end{itemize}
+Dann folgt
+\[
+\max_{z \in \Omega_h} u_h(z) \leq \max_{z \in \partial \Omega_h} u_h(z)
+\]
+\end{satz}
+\begin{proof}
+Angenommen, es gibt ein $\overline z \in \Omega_h$ mit $u_h(\overline z) = \max_{z \in \overline \Omega_h} u_h(z)$
+und $u_h(\overline z) > \max_{z \in \partial \Omega_h} u_h(z)$.
+
+Es gilt:
+\begin{align*}
+0 &\leq \sum_{z_k \in N(\overline z) \setminus \{ \overline z \}} \alpha_k(z_k) \left[ u_h(z_k) - u_h(\overline z) \right] \\
+    &= \sum_{z_k \in N(\overline z)} \alpha_k (z_k) \left[ u_h(z_k) - u_h(\overline z) \right] \\
+    &= \sum_{z_k \in N(\overline z)} \alpha_k (z_k) u_h(z_k) - u_h(\overline z) \sum_{z_k \in N(\overline z)} \alpha_k(z_k) \\
+    &= L_h u_h(\overline z) - 0 = f(\overline z) \leq 0
+\end{align*}
+Also folgt $u_h(z_k) = u_h(\overline z)$ für $z_k \in N(\overline z)$.
+Wiederhole den Beweis mit $\overline z \in N(\overline z)\setminus \{\overline z\}$, u.s.w.
+Nach endlich vielen Schritten kommt man zum Rand und erhält einen Widerspruch.
+\end{proof}
+
+\begin{kor}
+Seien die beiden Voraussetzungen des Satzes an $L_h$ erfüllt. Dann hat
+\begin{align*}
+L_h u_h( z) &= f(z), \text{ für } z \in \Omega_h \\
+u_h(z) &= g(z), \text{ für } z \in \partial \Omega_h
+\end{align*}
+eine eindeutige Lösung.
+\end{kor}
+\begin{proof}
+Angenommen es existieren zwei Lösungen $u_h$ und $v_h$. Dann erfüllt $w_h := u_h - v_h$
+\begin{align*}
+L_h w_h(z) &= 0, \text{ für } z \in \Omega_h \\
+w_h(z) &= 0, \text{ für } z \in \partial \Omega_h
+\end{align*}
+Nach dem diskreten Maximumsprinzip folgt $w_h(z) \leq 0$ für $z \in \Omega_h$.
+
+Ausserdem gilt:
+\begin{align*}
+L_h (-w_h(z)) &= 0, \text{ für } z \in \Omega_h \\
+-w_h(z) &= 0, \text{ für } z \in \partial \Omega_h
+\end{align*}
+Also folgt wieder mit dem diskreten Maximumsprinzip $-w_h(z) \leq 0$ für $z \in \Omega_h$.
+Damit ist aber $w_h = 0$ auf $\overline \Omega_h$, also $u_h = v_h$.
+\end{proof}
+
+

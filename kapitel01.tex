@@ -1,1 +1,22 @@
 \chapter{Einleitung}
+
+\subsection*{Verallgemeinerte partielle Integration}
+Integralsatz von Gauss:
+\[
+\int_\Omega \Div F \mathrm dx \ \mathrm dy = \int_{\partial \Omega} \langle F, v \rangle \mathrm ds
+\]
+
+Sei $F(x,y) := v \nabla u = (u_x v, u_y v)$.
+Dann ist 
+\[
+\Div F = \frac{\partial F_1}{\partial x} + \frac{\partial F_2}{\partial y}
+    = u_{xx} v + u_x v_x + u_{yy} v + u_y v_y
+    = v \Delta u + \langle \nabla u, \nabla v \rangle
+\]
+
+Einsetzen in den Integralsatz liefert nun:
+\[
+\int_\Omega \langle \nabla u, \nabla v \rangle \ \mathrm dx \ \mathrm dy
+    = - \int_\Omega v \cdot \nabla u \ \mathrm dx \ \mathrm dy
+    + \int_{\partial \Omega} v \langle \nabla u, v \rangle \ \mathrm ds
+\]
