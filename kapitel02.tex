@@ -140,4 +140,221 @@ Also folgt wieder mit dem diskreten Maximumsprinzip $-w_h(z) \leq 0$ für $z \in
 Damit ist aber $w_h = 0$ auf $\overline \Omega_h$, also $u_h = v_h$.
 \end{proof}
 
+\section{Konvergenz der Finiten Differenzen Methode}
+Wir betrachten das Poisson-Problem
+\begin{align*}
+- \Delta u &= f \text{ in } \Omega \\
+u &= g \text{ auf } \partial \Omega
+\end{align*}
+und das entsprechende diskrete Problem
+\begin{align*}
+- \Delta_h u_h &= f \text{ in } \Omega_h \\
+u_h &= g \text{ auf } \partial \Omega_h
+\end{align*}
+und fragen uns, ob das Finite Differenzen Verfahren konvergiert, d.h. ob
+\[
+|u(z) - u_h(z)| \to 0 \text{ für } h \to 0
+\]
+
+\begin{defi}
+Ein Finite Differenzen Verfahren $L_h$ heisst \textbf{konsistent} mit einem partiellen
+Differentialoperator (2. Ordnung) $L$, falls 
+\[
+Lu(z) - L_h u_h(z) \to 0 \text{ für } h \to 0 \text{ und für alle } z \in \Omega_h
+\]
+
+Ein Finite Differenzenverfahren hat die \textbf{Konsistenzordnung} $m$, falls 
+\[
+L u(z) - L_h u_h(z) = \mathcal O(h^m) \text{ für } h \to 0
+\]
+und für alle $z \in \Omega_h$, $u: \Omega \to \mathbb R$ genügend oft differenzierbar.
+\end{defi}
+
+\begin{bem}
+Sei $\eta_h (z) := u(z) - u_h(z)$, $z \in \Omega_h$ der Fehler.
+Dann gilt für $z \in \Omega_h$:
+\begin{align*}
+L_h \eta_h (z)
+    &= L_h (u - u_h) (z)
+    = L_h u (z) - L_h u_h(z)
+    = L_h u(z) - f(z) \\
+    &= L_h u(z) - L u(z)
+    = (L_h u - L u)(z)
+    = r_h(z) ,
+\end{align*}
+\end{bem}
+d.h. der Fehler erfüllt die Gleichung
+\begin{align*}
+L_h \eta_h(z) &= r_h \text{ in } \Omega_h \\
+\eta_h &= 0 \text{ auf } \partial \Omega_h
+\end{align*}
+
+In Matrix-Schreibweise:
+\[
+A_h E_h = R_h
+\]
+
+Es gilt:
+\[
+\Vert E_h \Vert_\infty \leq \Vert A_h^{-1} \Vert_\infty \cdot \Vert R_h \Vert_\infty
+\]
+
+\begin{bem}
+Hat $L_h$ die Konsistenzordnung $m$, so gilt:
+\[
+\Vert R_h \Vert_\infty = \mathcal O(h^m), \; h \to 0
+\]
+Damit $\Vert E_h \Vert_\infty \to 0$ für $h \to 0$ gilt, brauchen wir:
+\begin{itemize}
+\item \textbf{Konsistenz:} $\Vert R_h \Vert_\infty \to 0$ für $h \to 0$
+\item \textbf{Stabilität:} $\Vert A_h^{-1} \Vert_\infty \leq C$ für $h \to 0$, wobei die Konstante
+$C$ unabhängig von $h$ ist.
+\end{itemize}
+\[
+\text{Konsistenz } + \text{ Stabilität } \implies \text{ Konvergenz}
+\]
+\end{bem}
+
+\begin{lem}
+Sei $\Omega = (0, 1) \times (0, 1)$ und $R > 0$ so, dass $\Omega \subset \mathbb B(0, R) = 
+\{ (x,y) \in \mathbb R^2 : \ x^2 + y^2 \leq R^2 \}$.
+Sei $v_h: \overline \Omega_h \to \mathbb R$ die Lösung von
+\begin{align*}
+- \Delta_h v_h &= 1 \text{ in } \Omega_h \\
+v_h &= 0 \text{ auf } \partial \Omega_h
+\end{align*}
+Dann gilt für alle $z = (x, y) \in \overline \Omega_h$:
+\[
+0 \leq v_h(z) \leq \frac 1 4 \left( R^2 - \Vert z \Vert^2 \right)
+\]
+\end{lem}
+\begin{proof}
+Seien 
+\begin{align*}
+w(x, y) &:= \frac{ 1}{4} \left( R^2 - (x^2 + y^2) \right) \text{ für } (x,y) \in \overline \Omega \\
+w_h(x_i, y_j) &:= w(x_i, y_j) \text{ für } (x_i, y_j) \in \overline \Omega_h .
+\end{align*}
+Es ist
+\begin{align*}
+- \Delta w(x,y) &= - \left( \frac{ \partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2} \right)
+    \cdot \frac 1 4 \left( R^2 - (x^2 + y^2) \right) \\
+    &= \frac{\partial }{\partial x} \left( \frac 1 2 x \right) + \frac{\partial }{\partial y}
+    \left( \frac 1 2 y \right)
+    = \frac 1 2 + \frac 1 2 = 1
+\end{align*}
+Unter Verwendung des Fünf-Punkte-Sterns, rechnet man nach, dass auch
+\[
+- \Delta_h w_h = 1
+\]
+gilt.
+Da $w_h | \partial \Omega_h = \frac 1 4 \left( R^2 - (x^2 + y^2) \right) \geq 0$, erhalten wir
+\begin{align*}
+- \Delta_h (v_h - w_h) &= 0 \text{ in } \Omega_h \\
+v_h - w_h &\leq 0 \text{ auf } \partial \Omega_h
+\end{align*}
+Das Maximumsprinzip liefert nun
+\[
+v_h(z) - w_h(z) \leq 0 \text{ für } z \in \partial \Omega_h .
+\]
+Ausserdem gilt
+\begin{align*}
+- \Delta_h (-v_h) &= -1 \text{ in } \Omega_h \\
+-v_h &= 0 \text{ auf } \partial \Omega_h
+\end{align*}
+Also ist nach dem Maximumsprinzip
+\[
+v_h(z) \leq 0 \text{ für } z \in \Omega_h
+\]
+Insgesamt haben wir also
+\[
+0 \leq v_h(z) \leq w_h(z) \text{ für } z \in \overline \Omega_h
+\]
+\end{proof}
+
+\begin{satz}[Konvergenz]
+Seien $\Omega = (0,1) \times (0,1)$ und $u: \Omega \to \mathbb R$, $u_h: \Omega_h \to \mathbb R$
+Lösungen von
+\begin{align*}
+- \Delta u &= f \text{ in } \Omega \\
+u &= g \text{ auf } \partial \Omega
+\end{align*}
+und
+\begin{align*}
+- \Delta_h u_h &= f \text{ in } \Omega_h \\
+u_h &= g \text{ auf } \partial \Omega_h
+\end{align*}
+
+Dann gilt:
+\begin{align*}
+\Vert u - u_h \Vert_\infty &\leq Ch^2, \; h \to 0, \; u \in C^4( \overline \Omega) \\
+\Vert u - u_h \Vert_\infty &\leq Ch, \; h \to 0, \; u \in C^3( \overline \Omega) \\
+\Vert u - u_h \Vert_\infty &\to 0, \; h \to 0, \; u \in C^2( \overline \Omega)
+\end{align*}
+\end{satz}
+
+\begin{proof}
+Sei $\eta_h(z) := u(z) - u_h(z)$, $z \in \overline \Omega_h$ der Fehler.
+
+Wir wissen:
+\begin{align*}
+- \Delta_h \eta_h &= r_h := \Delta u - \Delta_h u \text{ in } \Omega_h \\
+\eta_h &= 0 \text{ auf } \partial \Omega_h
+\end{align*}
+
+Weiter gilt (siehe Serie 3):
+\begin{align*}
+\Vert r_h \Vert_\infty &\leq Ch^2, \; h \to 0, \; u \in C^4( \overline \Omega) \\
+\Vert r_h \Vert_\infty &\leq Ch, \; h \to 0, \; u \in C^3( \overline \Omega) \\
+\Vert r_h \Vert_\infty &\to 0, \; h \to 0, \; u \in C^2( \overline \Omega) \\
+\end{align*}
+
+Wir müssen die Stabilität beweisen, d.h. $\Vert \eta_h \Vert_\infty \leq C \Vert r_h \Vert_\infty$.
+Dazu betrachten wir
+\begin{align*}
+- \Delta_h v_h &= 1 \text{ in } \Omega_h \\
+v_h &= 0 \text{ auf } \partial \Omega_h 
+\end{align*}
+
+Es folgt:
+\begin{align*}
+- \Delta_h \left( \pm \eta_h - \Vert r_h \Vert_\infty v_h \right) = \left( \pm r_h - \Vert r_h \Vert_\infty
+ \right) &\leq 0 \text{ in } \Omega_h \\
+ \pm \eta_h - \Vert r_h \Vert_\infty v_h &= 0 \text{ auf } \partial \Omega_h
+\end{align*}
+
+Das Maximumsprinzip impliziert nun
+\[
+\pm \eta_h - \Vert r_h \Vert_\infty v_h \leq 0 \text{ in } \overline \Omega_h .
+\]
+Also ist auch 
+\[
+| \eta_h (z) | \leq \Vert r_h \Vert_\infty | v_h (z) |
+\]
+für $z \in \overline \Omega_h$.
+
+Nun folgt mit dem Lemma:
+\[
+\Vert \eta_h \Vert_\infty \leq \Vert r_h \Vert_\infty \Vert v_h \Vert_\infty
+    \leq \Vert r_h \Vert_\infty \cdot \frac 1 4 R^2
+\]
+\end{proof}
+
+\begin{bem}
+\begin{enumerate}
+\item Der obige Beweis gilt auch für allgemeine Gebiete, die diskret zusammenhängend sind. Der Beweis
+des Maximumsprinzip und des Lemmas sind identisch.
+\item Finite Differenzen Verfahren sind extrem effizient auf regelmässigen Gittern und einfachen 
+Geometrien. Sie lassen sich allerdings nur schwer anwenden bei
+\begin{itemize}
+\item Krummen Rändern
+\item Unstrukturierten Gittern
+\item Lokalen Verfeinerungen
+\end{itemize}
+\item Verahren höherer Ordnung benutzen mehr Punkte, z.B. der Neun-Punkte-Stern. Dies wiederum führt zu
+Problemen bei Randbedingungen.
+\end{enumerate}
+\end{bem}
+
+
+
 
