@@ -1,0 +1,110 @@
+\chapter{Finite Elemente Verfahren für die Poisson-Gleichung}
+\section{Variationsformulierung in 1D}
+
+Betrachte
+\begin{align*}
+-u'' &= f \text{ in } \Omega = (0,1) \\
+u(0) &= 0 \\ 
+u'(1) &= 0
+\end{align*}
+
+Durch Integration erhalten wir:
+\begin{align*}
+u'(\xi) &= - \int_0^\xi f(t) \ \mathrm dt + u'(0) \\
+u(x) &= - \int_0^x \int_0^\xi f(t) \ \mathrm dt \ \mathrm d\xi + x u'(0) + \underbrace{u(0)}_{=0} \\
+0 &= u'(1) = - \int_0^1 f(t) \ \mathrm dt = u'(0)
+\end{align*}
+
+Wir erhalten also die Lösungsformel
+\[
+u(x) = x \int_0^1 f(t) \ \mathrm dt - \int_0^x \int_0^\xi f(t) \ \mathrm dt \ \mathrm d\xi \label{eq:lsg}
+\]
+
+\begin{bem}
+Wir sehen: Falls $f \in C^k(\overline \Omega)$, dann ist $u \in C^{k+2} (\overline \Omega)$.
+\end{bem}
+
+\begin{defi}
+$f: \Omega \to \mathbb R$ heisst \textbf{stückweise} $C^k$, wenn es endlich viele offene 
+Teilgebiete $\Omega_i \subset \Omega$ gibt mit $f_{|\Omega_i} \in C^k(\overline \Omega_i)$.
+Wir schreiben $f \in C^k_{stw}(\Omega)$.
+\end{defi}
+
+\begin{satz}
+Sei $u$ gegeben durch (\ref{eq:lsg}) mit $f \in C^0_{stw}(\Omega)$. Dann ist
+$u \in C^2_{stw} \cap C^1(\Omega)$.
+\end{satz}
+\begin{proof}
+Klar.
+\end{proof}
+
+\begin{bem}
+Die Lösungsformel (\ref{eq:lsg}) hat eine Sinn auf $\overline \Omega$, auch wenn die 
+Differentialgleichung bei $x = s_i$ nicht gilt.
+\end{bem}
+
+\begin{idee}
+Verlange (\ref{eq:lsg}) nicht punktweise sondern im Mittel. Dazu multipliziere 
+$f$ mit einer Testfunktion $v \in C^1(\Omega)$, $v(0) = 0$ und integriere
+partiell:
+\[
+\int_0^1 f(x) v(x) \ \mathrm dx = - \int_0^1 v(x) u''(x) \ \mathrm dx
+    = \int_0^1 u'(x) v'(x) \ \mathrm dx - \underbrace{ \left[v(x) u'(x) \right]_0^1}_{=0}
+\]
+\end{idee}
+
+Seien
+\[
+a(u,v) := \int_0^1 u'(x) v'(x) \ \mathrm dx
+\]
+und
+\[
+\ell(v) := \int_0^1 f(x) v(x) \ \mathrm dx \ .
+\]
+
+Variationsformulierung: Finde $u \in V$ ($V$ ist noch nicht näher definiert), so dass
+\[
+a(u,v) = \ell(v), \; v \in V
+\]
+
+Für $u, v, w \in C^1(\overline \Omega)$, $\lambda \in \mathbb R$ gelten:
+\begin{align*}
+a(u+v, w) &= a(u,w) + a(v,w) \\
+a(u, v+w) &= a(u,v) + a(u,w) \\
+a(\lambda u, v) &= \lambda a(u,v) = a(u, \lambda v)
+\end{align*}
+Also ist $w$ eine Bilinearform.
+
+\[
+\ell(v + \lambda w) = \ell(v) + \lambda l(w)
+\]
+Also ist $\ell$ ein lineares Funktional.
+
+Offen ist noch die Wahl von $V$.
+
+\subsection{Sobolevräume in 1D}
+\begin{idee}
+Lineare Funktionalräume mit \textit{endlicher Energie}.
+\[
+H^k(\Omega) \supsetneqq C^k(\overline \Omega)
+\]
+\end{idee}
+
+\begin{defi}
+Sei $u \in C^0(\overline \Omega)$. Dann heisst $v: \Omega \to \mathbb R$ \textbf{schwache Ableitung} 
+von $u$, falls
+\[
+\int_\Omega v \varphi \ \mathrm dx = - \int_\Omega u \varphi' \ \mathrm dx, \; \varphi \in C_0^1(\overline \Omega) \ .
+\]
+Analog heisst $v$ $k$-te schwache Ableitung von $u$, falls
+\[
+\int_\Omega v \varphi \ \mathrm dx = (-1)^k \int_\Omega u \varphi^{(k)} \ \mathrm dx, 
+    \; \varphi \in C_0^k(\overline \Omega) \ ,
+\]
+wobei
+\[
+C_0^k(\overline \Omega) = \{ \varphi \in C^k(\overline \Omega) \ : \ 
+    \varphi^{(j)}(0) = \varphi^{(j)}(1) = 0, \ 0 \leq j \leq k-1 \}
+\]
+\end{defi}
+
