@@ -62,9 +62,9 @@ und
 \ell(v) := \int_0^1 f(x) v(x) \ \mathrm dx \ .
 \]
 
-Variationsformulierung: Finde $u \in V$ ($V$ ist noch nicht näher definiert), so dass
+\textbf{Variationsformulierung:} Finde $u \in V$ ($V$ ist noch nicht näher definiert), so dass
 \[
-a(u,v) = \ell(v), \; v \in V
+    a(u,v) = \ell(v), \; v \in V \label{eq:var} \tag{V}
 \]
 
 Für $u, v, w \in C^1(\overline \Omega)$, $\lambda \in \mathbb R$ gelten:
@@ -108,3 +108,214 @@ C_0^k(\overline \Omega) = \{ \varphi \in C^k(\overline \Omega) \ : \
 \]
 \end{defi}
 
+\begin{bspe}
+    \begin{enumerate}
+        \item Sei $u(x) := |x|$, $\Omega = (-1,1)$, dann ist
+            \[
+                v(x) = \begin{cases}
+                    -1, & x < 0 \\
+                    \text{nicht definiert}, & x = 0 \\
+                    1, & x > 0
+                \end{cases}
+            \]
+            die schwache Ableitung von $u$.
+            Denn für $\varphi \in C_0^1(\overline \Omega)$ ist
+            \[
+                \int_{-1}^1 v(x) \varphi(x) \ \mathrm dx
+                    = \int_{-1}^0 v(x) \varphi(x) \ \mathrm dx + \int_0^1 v(x) \varphi(x) \ \mathrm dx
+                    = - \int_{-1}^0 \varphi(x) \ \mathrm dx + \int_0^1 \varphi(x) \ \mathrm dx
+            \]
+            und
+            \begin{align*}
+                - \int_{-1}^1 u(x) \varphi'(x) \ \mathrm dx
+                &= \int_{-1}^0 x \varphi'(x) \mathrm dx - \int_0^1 x \varphi'(x) \ \mathrm dx \\
+                &= - \int_{-1}^0 \varphi(x) \ \mathrm dx + \left[ x \varphi(x) \right]_{-1}^0
+                + \int_0^1 \varphi(x) \ \mathrm dx - \left[ x \varphi(x) \right]_0^1 \ .
+            \end{align*}
+        \item Sei $u \in C^0(\overline \Omega) \cap C_{stw}^1(\Omega)$. Dann hat $u$ eine schwache Ableitung $u'$ gegeben
+            durch
+            \[
+                u'(x) = \begin{cases}
+                    \frac{\mathrm du}{\mathrm dx}(x), & x_{i-1} < x < s_i \\
+                    \text{nicht definiert}, & x = s_i
+                \end{cases}
+            \]
+        \item Falls $u \in C^1(\overline \Omega)$, d.h. $u$ ist differenzierbar im üblichen Sinn, dann ist die schwache
+            Ableitung gleich der klassischen Ableitung.
+    \end{enumerate}
+\end{bspe}
+
+\begin{konv}
+Alle Ableitungen werden als schwache Ableitungen verstanden.
+\end{konv}
+
+\begin{defi}
+    Sei $\Omega = (0,1)$. Dann ist
+    \begin{align*}
+        H^1(\Omega) &:= \{ u \in L^2(\Omega) \ : \ u' \in L^2(\Omega) \} \\
+        H^k(\Omega) &:= \{ u \in L^2(\Omega) \ : \ u^{(j)} \in L^2(\Omega), \ 0 \leq j \leq k \} \\
+        H^0(\Omega) &:= L^2(\Omega) := \left\{ u: \Omega \to \mathbb R \text{ messbar } : \ \int_\Omega |u|^2 \ \mathrm dx < \infty \right\} \\
+        \Vert u \Vert_{L^2(\Omega)}^2 &= \int_\Omega | u(x) |^2 \ \mathrm dx
+    \end{align*}
+\end{defi}
+
+\begin{bem}
+    Es gilt:
+    \[
+        L^2(\Omega) \supset H^1(\Omega) \supset H^2(\Omega) \supset \ldots \supset H^k(\Omega) \supset \ldots
+    \]
+\end{bem}
+
+\begin{satz}
+    $L^2(\Omega)$ ist ein Hilbertraum für das Skalarprodukt
+    \[
+        (u, v) := \int_\Omega u(x) v(x) \ \mathrm dx \ ,
+    \]
+    d.h. ein vollständiger linearer normierter Vektorraum (Banachraum) bezüglich der Norm
+    \[
+        \Vert u \Vert_{L^2(\Omega)} := \sqrt{ (u, u) } \ .
+    \]
+    Es gilt die Cauchy-Schwarzsche Ungleichung:
+    \[
+        | (u,v) | \leq \Vert u \Vert_{L^2(\Omega)} \Vert v \Vert_{L^2(\Omega)}
+    \]
+\end{satz}
+\begin{proof}
+Siehe Funktionalanalysis, Übungen.
+\end{proof}
+
+\begin{bem}
+    \begin{enumerate}
+        \item Man identifiziert $u, v \in L^2(\Omega)$ falls $u(x) = v(x)$ fast überall in $\Omega$, d.h.
+            $\Vert u - v \Vert_{L^2(\Omega)} = 0$.
+            Falls $u \in L^2(\Omega)$, macht es im Allgemeinen keinen Sinn von Punktwerten von $u(x)$ zu sprechen.
+            Insbesondere sind $u(0)$ oder $u(1)$ nicht wohldefiniert.
+        \item Sei $u \in L^2(\Omega)$.
+            \[
+                \int_\Omega u \varphi = 0, \; \forall \varphi \in C^\infty(\Omega) \quad \implies \quad u = 0 \text{ (im $L^2$-Sinn)}
+            \]
+    \end{enumerate}
+\end{bem}
+
+\begin{satz}
+    Für $k \geq 0$ ist $H^k(\Omega)$ ein Hilbertraum für das Skalarprodukt
+    \[
+        (u, v) := \sum_{j=0}^k ( u^{(j)}, v^{(j)} )_{L^2(\Omega)}
+    \]
+    Die induzierte Norm ist gegeben durch
+    \[
+        \Vert u \Vert_{H^k(\Omega)} := (u, u)^{\frac 1 2} = \left( \sum_{j=0}^k \Vert u^{(j)} \Vert_{L^2(\Omega)}^2 \right)^{\frac 1 2}
+    \]
+    Weiter ist die $H^k(\Omega)$-Seminorm gegeben durch
+    \[
+        \vert u \vert_{H^k(\Omega)} := \Vert u^{(k)} \Vert_{L^2(\Omega)}
+    \]
+\end{satz}
+
+\begin{bspe}
+    \begin{enumerate}
+        \item Wenn $u \in H^1(\Omega)$, dann ist
+            \begin{align*}
+                \Vert u \Vert_{H^1(\Omega)} &= \Vert u \Vert_1 = \sqrt{ \Vert u \Vert_{L^2}^2 + \Vert u' \Vert_{L^2}^2 } \\
+                \vert u \vert_{H^1(\Omega)} &= \vert u \vert_1 = \Vert u' \Vert_{L^2(\Omega)}
+            \end{align*}
+            Wenn $\Omega = (0,1)$ und $u = 1$ auf $\Omega$, dann ist $|u|_1 = 0$ aber $\Vert u \Vert_{H^1(\Omega)} = 1$.
+        \item $u(x) = |x - \frac 1 2 |^{- \frac 1 4} \in L^2(\Omega)$, aber $u(\frac 1 2) = \infty$.
+    \end{enumerate}
+\end{bspe}
+
+\begin{satz}
+    Sei $u \in H^1(\Omega)$, $\Omega = (0,1)$. Dann existiert ein $\tilde u \in C(\overline \Omega)$ mit $u(x) = \tilde u(x)$
+    fast überall.
+\end{satz}
+
+\begin{bem}
+    \begin{enumerate}
+        \item Falls $u \in H^1(\Omega)$, macht es Sinn von Punkt- und Randwerten von $u$ zu sprechen. Damit sind immer die 
+            Werte von $\tilde u$ gemeint ($u = \tilde u$ in $L^2$).
+        \item $H^1(\Omega) \subset C^0(\overline \Omega)$
+    \end{enumerate}
+\end{bem}
+
+\begin{bsp}
+    Sei $\Omega = (-1, 1)$ und 
+    \[
+        u(x) := \begin{cases}
+            0, & \text{falls } x < 0 \\
+            1, & \text{falls } x > 0
+        \end{cases}
+    \]
+    Dann ist $u \notin H^1(\Omega)$.
+
+    Es gilt $u \in L^2(\Omega)$. Angenommen $u' \in L^2(\Omega)$, wobei $u'$ die schwache Ableitung von $u$ bezeichne.
+    Dann gilt per Definition der schwachen Ableigung für jedes $\varphi \in C_0^1(\Omega)$:
+    \[
+        \int_{-1}^1 u' \varphi \ \mathrm  dx = - \int_{-1}^1 u \varphi' \ \mathrm dx = - \int_0^1 \varphi' \ \mathrm dx = \varphi(0)
+    \]
+    Aus der Cauchy-Schwarz-Ungleichung folgt:
+    \[
+        |\varphi(0)| = | (u', \varphi) | \leq \Vert u' \Vert_{L^2(\Omega)}  \Vert \varphi \Vert_{L^2(\Omega)} 
+            \leq C \Vert \varphi \Vert_{L^2(\Omega)}
+    \]
+    Für jedes $C > 0$ gibt es aber ein $\varphi \in C_0^1(\Omega)$ mit
+    \[
+        | \varphi(0) | \geq C \Vert \varphi \Vert_{L^2(\Omega)} \ ,
+    \]
+    was ein Widerspruch darstellt.
+\end{bsp}
+
+\begin{satz}
+    Für $m \geq 0$ gilt:
+    $C^\infty(\Omega) \cap H^m(\Omega)$ liegt dicht in $H^m(\Omega)$.
+\end{satz}
+
+\begin{bem}
+    Funktionen in $H^m(\Omega)$ lassen sich beliebig genau durch glatte Funktionen approximieren (bzgl. der 
+    $\Vert \cdot \Vert_{H^m}$-Norm).
+\end{bem}
+
+\begin{defi}
+    Die Vervollständigung von $C_0^\infty(\Omega)$ bzgl. der $\Vert \cdot \Vert_{H^m}$-Norm heisst
+    $H_0^m(\Omega)$.
+    \[
+        C_0^\infty(\Omega) := \{ u \in C^\infty(\Omega) \ : \ \supp\{u\} \subset \subset \Omega \}
+    \]
+\end{defi}
+
+\begin{bsp}
+    Sei $\Omega = (0,1)$,  $H_0^1(\Omega) = \{ v \in H^1(\Omega) \ : \ v(0) = v(1) = 0 \}.$
+    Sei $u(x) = x$ auf $\Omega$. Dann ist $u \in H^1(\Omega)$, aber $u \notin H_0^1(\Omega)$.
+
+    Angenommen, $u \in H_0^1(\Omega)$. 
+    Definiere $L: H^1(\Omega) \to \mathbb R$, $v \mapsto \int_0^1 v'(x) \ \mathrm dx$.
+    
+    Mit der Cauchy-Schwarz-Ungleichung folgt:
+    \[
+        |L(v)| = \left| \int_\Omega 1 \cdot v'(x) \ \mathrm dx \right|
+            \leq \Vert v' \Vert_{L^2(\Omega)} \Vert 1 \Vert_{L^2(\Omega)}
+            \leq \Vert v \Vert_H^1(\Omega)
+    \]
+    Also ist $L$ stetig.
+
+    Sei $\{ \varphi_n \}_{n\geq 1} \subset C_0^\infty$ so, dass 
+    $\Vert \varphi_n - u \Vert_{H^1(\Omega)} \to 0$ für $n \to \infty$.
+
+    Es folgt
+    \[ 
+        |L(u) - L(\varphi_n) | = | L(u - \varphi_n) | \leq \Vert u - \varphi_n \Vert_{H^1(\Omega)} \to 0 \ ,
+    \]
+    d.h. $L(\varphi_n) \to L(u)$ für $n \to \infty$.
+    Aber es gilt
+    \[
+        L(\varphi_n) = \int_0^1 \varphi'_n(x) \ \mathrm dx = 0 \text{ für } n \in \mathbb N \quad \text{und} \quad
+        L(u) = \int_0^1 1 \ \mathrm dx = 1 \ ,
+    \]
+    also haben wir einen Widerspruch gefunden und damit ist $u \notin H_0^1(\Omega)$.
+\end{bsp}
+
+Wir können nun den Raum $V$ für \eqref{eq:var} festlegen:
+
+Finde $u \in V := \{u \in H^1(\Omega) \ : \ u(0) = 0 \}$ so, dass
+\[
+    a(u,v) = \int_\Omega u' v' = \ell(v) = \int_\Omega f v \quad \forall v \in V
+\]
