@@ -12,7 +12,7 @@ Durch Integration erhalten wir:
 \begin{align*}
 u'(\xi) &= - \int_0^\xi f(t) \ \mathrm dt + u'(0) \\
 u(x) &= - \int_0^x \int_0^\xi f(t) \ \mathrm dt \ \mathrm d\xi + x u'(0) + \underbrace{u(0)}_{=0} \\
-0 &= u'(1) = - \int_0^1 f(t) \ \mathrm dt = u'(0)
+0 &= u'(1) = - \int_0^1 f(t) \ \mathrm dt + u'(0)
 \end{align*}
 
 Wir erhalten also die Lösungsformel
@@ -319,3 +319,257 @@ Finde $u \in V := \{u \in H^1(\Omega) \ : \ u(0) = 0 \}$ so, dass
 \[
     a(u,v) = \int_\Omega u' v' = \ell(v) = \int_\Omega f v \quad \forall v \in V
 \]
+
+\begin{satz}[(V) $\implies$ (P)]
+    Sei $f \in C(\overline \Omega)$ und $u \in C^2(\overline \Omega)$. Falls $u$ eine Lösung von \eqref{eq:var} ist, so ist $u$ auch eine 
+    Lösung der starken From, d.h.
+    \begin{align*}
+        -u'' &= f \text{ in } \Omega \\
+        u(0) &= 0 \\
+        u'(1) &= 0
+    \end{align*}
+\end{satz}
+\begin{proof}
+    Wir wissen:
+    \[
+        \int_\Omega u' v' = \int_\Omega f v \quad \forall v \in V
+    \]
+    Sei $v \in V \cap C(\overline \Omega)$.
+    \[
+        \int_\Omega f v \ \mathrm dx
+            = \int_\Omega u' v' \ \mathrm dx
+            = - \int_0^1 u'' v \ \mathrm dx +  u'(1) v(1) - \underbrace{u'(0) v(0)}_{=0} \ ,
+    \]
+    d.h. für $v \in V \cap C(\overline \Omega)$ mit $v(1) = 0$ gilt:
+    \[
+        \int_0^1 \left( f(x) + u''(x) \right) v(x) \ \mathrm dx = 0
+    \]
+    Da $w(x) := f(x) + u''(x)$ auf $[0,1]$ stetig ist, folgt $w = 0$.
+
+    Da $u \in V$, ist $u(0) = 0$ und für $v(x) := x \in V$ haben wir
+    \[
+        0 = \int_0^1 \left( f(x) + u''(x) \right) v(x) \ \mathrm dx = u'(1) v(1) = u'(1) \ .
+    \]
+    Also erfüllt $u$ automatisch die homogene Neumann-Randbedingung bei $x=1$. Deshalb heissen 
+    Neumann-Randbedingungen auch natürliche Randbedingungen.
+\end{proof}
+
+\section{Die Finite Elemente Methode in 1D}
+
+Betrachte das Modellproblem
+\begin{align*}
+    -u''(x) &= f(x) \text{ in } \Omega = (0,1) \\
+    u(0) = u(1) &= 0
+    \label{eq:p}
+    \tag{P}
+\end{align*}
+
+und die Variationsformulierung:
+
+Finde $u \in V = H_0^1(\Omega)$ so, dass 
+\[
+    a(u,v) = \ell(v) \label{eq:var} \tag{V}
+\]
+für alle $v \in V$ mit
+\begin{align*}
+    a(u,v) &:= \int_\Omega u'(x) v'(x) \ \mathrm dx \\
+    \ell(v) &:= \int_\Omega f(x) v(x) \ \mathrm dx
+\end{align*}
+
+
+\subsubsection*{Galerkin Verfahren}
+Wähle $V_h \subset V$ Teilraum von $V$ mit $\dim V_h < \infty$. Ersetze $V$ durch $V_h$ in \eqref{eq:var}. 
+Finde $u_h \in V_h$ so, dass
+\[
+    a(u_h, v) = \ell(v) \quad \forall v \in V_h
+\]
+
+\textbf{Wahl von $V_h$:} Sei $K = (a, b) \subset \mathbb R$, 
+\[
+    \mathcal P^\ell := \{ p(x) \text{ Polynom } : \ p(x) = a_0 + a_1 x + \ldots + a_\ell x^\ell \} \ .
+\]
+Wir wählen
+\[
+    V_h := \{ v \in V \ : \ v_{|(x_i, x_{i+1})} \in \mathcal P^1( (x_i, x_{i+1}) ), \ i = 0, \ldots N \} \ ,
+\]
+d.h. wenn $v \in V_h$, dann ist $v(0) = v(1) = 0$, $v \in C^0(\Omega)$ ($H_0^1(\Omega) \subset C^0(\overline \Omega)$) 
+und $v$ ist stückweise linear.
+
+Sei $\{ \varphi_j \}_{j=1}^N$ eine Basis von $V_h$:
+\[
+    \varphi_j = 
+    \begin{cases}
+        1 - \frac{|x - x_j|}{h}, & x_j \leq x \leq x_{j+1} \\
+        0, & \text{sonst}
+    \end{cases}
+\]
+Es gilt $\varphi_j(x_k) = \delta_{jk}$ und jedes $v \in V_h$ lässt sich eindeutig schreiben als
+\[
+    v(x) = \sum_{j=1}^N v_j \varphi_j(x) \ , \quad v_j \in \mathbb R
+\]
+Insbesondere ist 
+\[
+    v(x_k) = \sum_{j=1}^N v_j \varphi_j(x_k) = v_k
+\]
+
+\textbf{Galerkin Approximation $u_h \in V_h$:}
+
+\begin{align*}
+    a(u_h, v) = \ell(v) \quad \forall v \in V_h \quad
+        &\Leftrightarrow \quad a(u_h, \varphi_i) = \ell( \varphi_i) \quad \forall i = 1, \ldots, N  \\
+        &\Leftrightarrow \quad a\left( \sum_{j=1}^N u_j \varphi_j, \varphi_i \right) = \ell(\varphi_i) \quad \forall i=1, \ldots, N \\
+        &\Leftrightarrow \quad \sum_{j=1}^N a(\varphi_j, \varphi_i) u_j = \ell(\varphi_i) \quad \forall i=1, \ldots, N \\
+        &\Leftrightarrow \quad \mat A \vec u = \vec \ell \ ,
+\end{align*}
+wobei
+\[
+    \mat A = (a_{ij})_{i,j = 1,\ldots, N} = ( a(\varphi_i, \varphi_j))_{i,j=1,\ldots,N}, \quad
+    \vec u = \begin{bmatrix} u_1 \\ \vdots \\ u_N \end{bmatrix}, \quad
+    \vec \ell = \begin{bmatrix} \ell(\varphi_1) \\ \vdots \\ \ell(\varphi_N) \end{bmatrix}
+\]
+Die $(N \times N)$-Matrix $\mat A$ heisst \textbf{Steifigkeitsmatrix} und der Vektor $\vec \ell$ heisst
+\textbf{Lastvektor}.
+
+\vspace{1em}
+Bestimme $\mat A = (a_{ij})$:
+\begin{align*}
+    a_{ii} &= a(\varphi_i, \varphi_i) = \int_\Omega \varphi_i' \varphi_i' \ \mathrm dx
+        = \int_{x_{i-1}}^{x_{i+1}} \varphi_i'(x)^2 \ \mathrm dx \\
+        &= \int_{x_{i-1}}^{x_i} \varphi_i'(x)^2 \ \mathrm dx + \int_{x_i}^{x_{i+1}} \varphi_i'(x)^2 \ \mathrm dx
+        = h \left(- \frac 1 h \right)^2 + h \left(\frac 1 h\right)^2 = \frac 2 h \\
+    a_{ij} &= 0 \text{ falls } |i-j| \geq 2 \\
+        a_{i, i+1} &= a(\varphi_i, \varphi_{i+1}) = \int_{x_i}^{x_{i+1}} \varphi_i'(x) \varphi_{i+1}'(x) \ \mathrm dx
+        = h \frac 1 h \left( - \frac 1 h \right) = - \frac 1 h \\
+    a_{i+1, i} &= a_{i, i+1}
+\end{align*}
+
+\vspace{1em} Bestimme $\vec \ell = (\ell_i)_i$:
+\[
+    \ell_i = \ell(\varphi_i) = \int_{x_{i-1}}^{x_i} f(x) \varphi_i(x) \ \mathrm dx
+\]
+Um das Integral auszuwerten verwendet man im Allgemeinen eine Quadraturformel.
+
+\subsubsection*{Finite Elemente Grundalgorithmus}
+
+Betrachte
+\begin{align*}
+    - \left( c(x) u'(x) \right)' &= f(x) \text{ für } x \in \Omega = (0,1) \\
+    u(0) = u(1) &= 0
+\end{align*}
+
+Variationsforumulierung: Finde $u \in H_0^1(\Omega) = V$ so, dass
+\[
+    \int_0^1 c(x) u'(x) v'(x) \ \mathrm dx = \int_0^1 f(x) v(x) \ \mathrm dx
+\]
+für alle $v \in V$.
+Sei $\tau_h = \{ K_j \}_{j=1}^N$, $K_j = (x_{j-1}, x_j)$, $|x_j - x_{j-1}| \leq h$ für $j = 1, \ldots, N$ und
+$\overline \Omega = \bigcup_{j=1}^N \overline K_j$.
+
+Setze
+\[
+    V_h = \{ v \in C(\overline \Omega) \ : \ v(0) = v(1) = 0, \ v_{K_j} \in \mathcal P^k(K_j) \} \subset V, \; k \geq 1
+\]
+
+Da $\dim( \mathcal P^k(K_j)) = k+1$, wählen wir auf jedem Element $k+1$ Basisfunktionen.
+
+Wie zuvor, sei 
+\[
+    u_h(x) = \sum_{j=1}^N u_j \varphi_j(x) \ .
+\]
+Dann ist
+\[
+    u_h(x_i) = \sum_{j=1}^N u_j \varphi_j(x_i) = \sum_{j=1}^N u_j \delta_{ij} = u_i .
+\]
+
+Für $i,j = 1, \ldots, N$, $a_{ij} = a(\varphi_i, \varphi_j)$, $\mat A = (a_{ij})$, $\ell_i = (f, \varphi_i)$, löse
+das lineare Gleichungssystem $\mat A \vec u = \vec \ell$.
+
+$\mat A$ heisst Steifigkeitsmatrix, $\vec \ell$ heisst Lastvektor.
+
+Diese Vorgehensweise ist algorithmisch ungeschickt, weil sie basisfunktionsorientiert ist. Es ist besser, sich an den 
+Elementen zu orientieren.
+
+\vspace{1em}
+\textbf{Idee:} Zerlege $a(u,v)$ und $\ell(v)$ in Elementbeiträge:
+\begin{align*}
+    a(u,v) &= \sum_{K \in \tau_h} a_K(u,v) \\
+    a_K(u,v) &= \int_K c(x) u'(x) v'(x) \ \mathrm dx \\
+    \ell(v) &= \sum_{K \in \tau_h} \ell_K(v) \\
+    \ell_K(v) &= \int_K f(x) v(x) \ \mathrm dx
+\end{align*}
+
+Die Elementbeiträge können unabhängig voneinander (und parallel) ausgerechnet werden.
+
+Dazu transformiere jedes $K_j \in \tau_h$ auf ein Referenzelement $\hat K = (-1, 1)$ via der Elementabbildung
+\begin{align*}
+    F_{K_j}: \ \hat K &\to K_j \\
+    \xi &\mapsto m_j + \frac{\xi h_j}{2}
+\end{align*}
+wobei $m_j = \displaystyle \frac{x_j + x_{j-1}}{2}$ und $h_j = x_{j} - x_{j-1}$.
+
+Sei $k=1$. Wir definieren
+\begin{align*}
+    N_0(\xi) &= {\varphi_{j-1}}_{|K_j}(F_{K_j}(\xi) ) \\
+    N_1(\xi) &= {\varphi_j}_{|K_j}( F_{K_j}(\xi) )
+\end{align*}
+
+Dies sind Polynome in $\xi$.
+
+Wir haben 
+\[
+    N_0(\xi) = \frac{1-\xi}{2} \text{ und } N_1(\xi) = \frac{1+\xi}{2} \ .
+\]
+
+Die $2 \times 2$ Elementsteifigkeitsmatrix $\mat A_K$, $K \in \tau_h$ ist definiert durch
+\begin{align*}
+    (A_K)_{ij} &= a_K \left( N_i(F_K^{-1}(x) ), N_j( F_K^{-1}(x)) \right) \\
+        &= \int_K c(x) \left( \frac{\mathrm d }{\mathrm dx} N_i(F_K^{-1}(x)) \right) 
+        \left( \frac{\mathrm d}{\mathrm dx} N_j(F_K^{-1}(x)) \right) \ \mathrm dx \\
+        &= \int_{\hat K} c( F_K(\xi)) N_i'(\xi) N_j'(\xi) \cdot \left(  \frac{2}{h_j} \right)^2 \frac{h_j}{2} \ \mathrm dx \\
+        &= \int_{\hat K} c( F_K(\xi)) N_i'(\xi) N_j'(\xi) \cdot   \frac{2}{h_j}  \ \mathrm dx \\
+\end{align*}
+für $i = 0,1$ und $j=0,1$. Das dritte Gleichheitszeichen folgt wegen $x = m_j + \frac{\xi h_j}{2}$ und 
+$\mathrm dx = \frac{h_j}{2} \mathrm d \xi$. Für $c(x)$ allgemein müssen diese Integrale durch eine Quadraturformel
+approximiert werden. Oft ist jedoch $c(x)$ stückweise konstant, d.h. $c_{|K} = c_K$. Dann ist 
+\[
+    \mat {A_K} = \frac{2}{h_K} c_K \mat{\hat A}, \text{ für } K \in \tau_h
+\]
+mit z.B.
+\[
+    \hat A_{00} = \int_{-1}^1 N_0'(\xi) N_0'(\xi) \ \mathrm d \xi = \frac 1 2 \ ,
+\]
+usw., also 
+\[
+    \mat{\hat A} = \frac 1 2 
+    \begin{bmatrix}
+        1 & -1 \\
+        -1 & 1
+    \end{bmatrix}
+\]
+
+Analog gehen wir beim Lastvektor vor:
+\[
+    (\ell_K)_i = \int_{\hat K} f( F_K(\xi)) N_i(\xi) \frac{h_K}{2} \ \mathrm d \xi \ , \; i = 0,1
+\]
+Falls $f_{|K} = f_K$, dann ist
+\[
+    (\ell_K)_i = \frac{h_K}{2} f_K( \hat \ell)_i = 1  \; \forall K \in \tau_h
+\]
+also
+\[
+\vec{\hat \ell} = \begin{bmatrix} 1 \\ 1 \end{bmatrix} \ .
+\]
+
+Schliesslich müssen aus $\mat{A_K}$ und $\vec{\ell_K}$ die globalen $\mat A$ und $\vec \ell$ zusammengesetzt werden 
+(\textbf{Assemblierung}): 
+\begin{align*}
+    A_{jj} &= A_{K_j}(1,1) + A_{K_{j+1}}(0,0) \\
+A_{j,j+1} &= A_{K_{j+1}} (0,1)
+\end{align*}
+    
+
+
+
+
+
+
